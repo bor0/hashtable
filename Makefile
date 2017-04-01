@@ -1,4 +1,4 @@
-all: lib tests
+all: lib tests examples
 
 lib:
 	mkdir -p bin
@@ -6,12 +6,20 @@ lib:
 	gcc -Iinclude src/ll.c -c -o bin/ll.o
 	ar rcs bin/libht.a bin/*.o
 
-tests: bin/libht.a
+tests: lib
 	mkdir -p bin
 	gcc tests/ht_test.c -Iinclude -Lbin -lht -o bin/ht_test
+	gcc tests/ll_test.c -Iinclude -Lbin -lht -o bin/ll_test
 
-run:
+runtests: tests
 	bin/ht_test
+	bin/ll_test
+
+examples: lib
+	gcc examples/example1.c -Iinclude -Lbin -lht -o bin/example1
+
+runexamples: examples
+	bin/example1
 
 clean:
 	rm -rf bin
