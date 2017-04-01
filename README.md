@@ -4,6 +4,8 @@ Hello. I wrote this mainly as an exercise to run some benchmark tests. I'm compa
 
 The implementation uses separate chaining with linked lists for collision resolution. Thus, we have a fixed array (malloc'd) which we have O(1) access to it, and each value is actually a linked list.
 
+The dependency relation between ht and ll is asymmetric.
+
 For benchmarks, check the `benchmarks` folder.
 
 To build the tests, run `make tests`. To run them, write `make runtests`.
