@@ -87,3 +87,26 @@ void ll_free(ll *list) {
 
 	return;
 }
+
+ll_iterator ll_iterator_start(ll *list) {
+	ll_iterator iterator;
+
+	iterator.head = iterator.current = list;
+	return iterator;
+}
+
+ll *ll_iterator_get(ll_iterator *iterator) {
+	return iterator->current;
+}
+
+int ll_iterator_end(ll_iterator *iterator) {
+	return iterator->current->next == NULL;
+}
+
+void ll_iterator_next(ll_iterator *iterator) {
+	if (ll_iterator_end(iterator)) {
+		return;
+	}
+
+	iterator->current = iterator->current->next;
+}

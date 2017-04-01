@@ -15,12 +15,30 @@
 */
 
 typedef struct ll {
+	// key of hashtable element
 	char *key;
+
+	// value of hashtable element
 	char *val;
+
+	// next element in linkedlist
 	struct ll *next;
 } ll;
+
+typedef struct ll_iterator {
+	// start of list
+	ll *head;
+
+	// current pointer
+	ll *current;
+} ll_iterator;
 
 void ll_add(ll **list, char *key, char *val);
 void ll_remove(ll **list, char *key);
 char **ll_find(ll *list, char *key);
 void ll_free(ll *list);
+
+ll_iterator ll_iterator_start(ll *list);
+ll *ll_iterator_get(ll_iterator *iterator);
+int ll_iterator_end(ll_iterator *iterator);
+void ll_iterator_next(ll_iterator *iterator);
