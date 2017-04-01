@@ -116,3 +116,26 @@ void ht_free(ht **table) {
 float ht_loadfactor(ht *table) {
 	return table == NULL || table->len == 0 ? 0 : (float) table->elements / table->len;
 }
+
+void ht_rehash(ht **table, int len) {
+	ht *new_table;
+	int i;
+
+	if (len <= 0) {
+		return;
+	}
+
+	new_table = ht_create(len);
+
+	for (i = 0; i < (*table)->len; i++) {
+		if ((*table)->array[i] == NULL) {
+			continue;
+		}
+		// TODO: List iterator feature
+		// ...
+		// ht_set(new_table, a, b);
+	}
+
+	ht_free(table);
+	*table = new_table;
+}
