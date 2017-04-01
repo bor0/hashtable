@@ -42,17 +42,18 @@ ht *ht_create(int len) {
 
 void ht_print(ht *table) {
 	int i;
-	ll *tmp;
+	ll *list;
+	ll_iterator iterator;
 
 	printf("[ ");
 
 	for (i = 0; i < table->len; i++) {
 		printf("\n {");
-		tmp = table->array[i];
+		list = table->array[i];
 
-		while (tmp != NULL) {
-			printf("\n  '%s': '%s',", ll_get_key(tmp), ll_get_value(tmp));
-			tmp = tmp->next;
+		for (iterator = ll_iterator_start(list); !ll_iterator_end(&iterator); ll_iterator_next(&iterator)) {
+			list = ll_iterator_get(&iterator);
+			printf("\n  '%s': '%s',", ll_get_key(list), ll_get_value(list));
 		}
 
 		printf("\n },");

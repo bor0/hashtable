@@ -7,7 +7,6 @@ lib:
 	ar rcs bin/libht.a bin/*.o
 
 tests: lib
-	mkdir -p bin
 	gcc tests/ht_test.c -Iinclude -Lbin -lht -o bin/ht_test
 	gcc tests/ll_test.c -Iinclude -Lbin -lht -o bin/ll_test
 

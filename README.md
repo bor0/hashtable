@@ -6,11 +6,13 @@ The implementation uses separate chaining with linked lists for collision resolu
 
 For benchmarks, check the `benchmarks` folder.
 
-To build the tests, run `make tests`. To run them afterwards, write `make runtests`.
+To build the tests, run `make tests`. To run them, write `make runtests`.
 
-To build the examples, run `make examples`. To run them afterwards, write `make runexamples`.
+To build the examples, run `make examples`. To run them, write `make runexamples`.
 
 To just build the library, write `make lib`.
+
+To build everything, write `make`.
 
 To cleanup, run `make clean`.
 
