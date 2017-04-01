@@ -18,12 +18,12 @@
 #include <string.h>
 #include "ll.h"
 
-void ll_add(ll **list, char *key, char *val) {
+void ll_add(ll **list, char *key, char *value) {
 	ll *tmp = *list;
 	*list = (ll *)malloc(sizeof(ll));
 	(*list)->next = tmp;
 	(*list)->key = strdup(key);
-	(*list)->val = strdup(val);
+	(*list)->value = strdup(value);
 
 	return;
 }
@@ -40,7 +40,7 @@ void ll_remove(ll **list, char *key) {
 	while (tmp) {
 		if (!strcmp(tmp->key, key)) {
 			free(tmp->key);
-			free(tmp->val);
+			free(tmp->value);
 
 			next = tmp->next;
 
@@ -62,10 +62,10 @@ void ll_remove(ll **list, char *key) {
 	return;
 }
 
-char **ll_find(ll *list, char *key) {
+ll *ll_find(ll *list, char *key) {
 	while (list) {
 		if (!strcmp(list->key, key)) {
-			return &list->val;
+			return list;
 		}
 
 		list = list->next;
@@ -80,7 +80,7 @@ void ll_free(ll *list) {
 	while (list) {
 		tmp = list->next;
 		free(list->key);
-		free(list->val);
+		free(list->value);
 		free(list);
 		list = tmp;
 	}
@@ -92,8 +92,26 @@ char *ll_get_key(ll *list) {
 	return list == NULL ? NULL : list->key;
 }
 
-char *ll_get_val(ll *list) {
-	return list == NULL ? NULL : list->val;
+char *ll_get_value(ll *list) {
+	return list == NULL ? NULL : list->value;
+}
+
+void ll_set_key(ll *list, char *key) {
+	if (list == NULL) {
+		return;
+	}
+
+	free(list->key);
+	list->key = strdup(key);
+}
+
+void ll_set_value(ll *list, char *value) {
+	if (list == NULL) {
+		return;
+	}
+
+	free(list->value);
+	list->value = strdup(value);
 }
 
 ll_iterator ll_iterator_start(ll *list) {

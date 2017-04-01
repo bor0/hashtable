@@ -19,7 +19,7 @@ typedef struct ll {
 	char *key;
 
 	// value of hashtable element
-	char *val;
+	char *value;
 
 	// next element in linkedlist
 	struct ll *next;
@@ -33,12 +33,14 @@ typedef struct ll_iterator {
 	ll *current;
 } ll_iterator;
 
-void ll_add(ll **list, char *key, char *val);
+void ll_add(ll **list, char *key, char *value);
 void ll_remove(ll **list, char *key);
-char **ll_find(ll *list, char *key);
+ll *ll_find(ll *list, char *key);
 void ll_free(ll *list);
 char *ll_get_key(ll *list);
-char *ll_get_val(ll *list);
+char *ll_get_value(ll *list);
+void ll_set_key(ll *list, char *value);
+void ll_set_value(ll *list, char *value);
 
 ll_iterator ll_iterator_start(ll *list);
 ll *ll_iterator_get(ll_iterator *iterator);

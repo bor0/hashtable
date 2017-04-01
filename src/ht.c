@@ -51,7 +51,7 @@ void ht_print(ht *table) {
 		tmp = table->array[i];
 
 		while (tmp != NULL) {
-			printf("\n  '%s': '%s',", tmp->key, tmp->val);
+			printf("\n  '%s': '%s',", ll_get_key(tmp), ll_get_value(tmp));
 			tmp = tmp->next;
 		}
 
@@ -75,29 +75,28 @@ int ht_hash(char *str, int len) {
 
 char *ht_get(ht *table, char *key) {
 	int index = ht_hash(key, table->len);
-	char **value;
+	ll *list;
 
 	if (table->array[index] == NULL) {
 		return NULL;
 	}
 
-	value = ll_find(table->array[index], key);
+	list = ll_find(table->array[index], key);
 
-	return value != NULL ? *value : NULL;
+	return ll_get_value(list);
 }
 
-void ht_set(ht *table, char *key, char *val) {
+void ht_set(ht *table, char *key, char *value) {
 	int index = ht_hash(key, table->len);
-	char **value = ll_find(table->array[index], key);
+	ll *list = ll_find(table->array[index], key);
 
-	if (value != NULL) {
-		free(*value);
-		*value = strdup(val);
+	if (list != NULL) {
+		ll_set_value(list, value);
 		return;
 	}
 
 	table->elements++;
-	ll_add(&table->array[index], key, val);
+	ll_add(&table->array[index], key, value);
 }
 
 void ht_unset(ht *table, char *key) {
@@ -155,7 +154,7 @@ void ht_rehash(ht **table, int len) {
 
 		for (iterator = ll_iterator_start(list); !ll_iterator_end(&iterator); ll_iterator_next(&iterator)) {
 			tmp = ll_iterator_get(&iterator);
-			ht_set(new_table, ll_get_key(tmp), ll_get_val(tmp));
+			ht_set(new_table, ll_get_key(tmp), ll_get_value(tmp));
 		}
 	}
 
