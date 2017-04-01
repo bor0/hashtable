@@ -18,6 +18,8 @@ int main() {
 
 	ht_print(test);
 
+	printf("load factor: %f\n", ht_loadfactor(test));
+
 	ht_free(&test);
 
 	return 0;

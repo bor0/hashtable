@@ -5,9 +5,16 @@
 
 ht *ht_create(int len) {
 	int i;
-	ht *table = (ht *)malloc(sizeof(ht));
+	ht *table;
+
+	if (len <= 0) {
+		return NULL;
+	}
+
+	table = (ht *)malloc(sizeof(ht));
 
 	table->len = len;
+	table->elements = 0;
 	table->array = (ll **)malloc(len * sizeof(ll *));
 
 	for (i = 0; i < len; i++) {
@@ -73,6 +80,7 @@ void ht_set(ht *table, char *key, char *val) {
 		return;
 	}
 
+	table->elements++;
 	ll_add(&table->array[index], key, val);
 }
 
@@ -83,6 +91,7 @@ void ht_unset(ht *table, char *key) {
 		return;
 	}
 
+	table->elements--;
 	ll_remove(&table->array[index], key);
 }
 
@@ -102,4 +111,8 @@ void ht_free(ht **table) {
 	free(*table);
 
 	*table = NULL;
+}
+
+float ht_loadfactor(ht *table) {
+	return table == NULL || table->len == 0 ? 0 : (float) table->elements / table->len;
 }
