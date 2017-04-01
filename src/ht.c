@@ -62,7 +62,7 @@ void ht_print(ht *table) {
 	printf("\n]\n");
 }
 
-int ht_hash(char *str, int len) {
+static int ht_hash(char *str, int len) {
         int h = 1234;
 	int a = 4567;
 	int i;
@@ -72,19 +72,6 @@ int ht_hash(char *str, int len) {
         }
 
         return h;
-}
-
-char *ht_get(ht *table, char *key) {
-	int index = ht_hash(key, table->len);
-	ll *list;
-
-	if (table->array[index] == NULL) {
-		return NULL;
-	}
-
-	list = ll_find(table->array[index], key);
-
-	return ll_get_value(list);
 }
 
 void ht_set(ht *table, char *key, char *value) {
@@ -98,6 +85,20 @@ void ht_set(ht *table, char *key, char *value) {
 
 	table->elements++;
 	ll_add(&table->array[index], key, value);
+}
+
+
+char *ht_get(ht *table, char *key) {
+	int index = ht_hash(key, table->len);
+	ll *list;
+
+	if (table->array[index] == NULL) {
+		return NULL;
+	}
+
+	list = ll_find(table->array[index], key);
+
+	return ll_get_value(list);
 }
 
 void ht_unset(ht *table, char *key) {
