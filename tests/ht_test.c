@@ -14,24 +14,29 @@
  * along with Hashtable.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "ll.h"
+#include <stdio.h>
+#include "ht.h"
 
-typedef struct ht {
-	// linked list
-	ll **array;
+int main() {
+	ht *test = ht_create(5);
 
-	// number of current elements
-	int elements;
+	ht_set(test, "asdf", "1");
+	ht_set(test, "bsdf", "2");
+	ht_set(test, "csdf", "3");
+	ht_set(test, "dsdf", "4");
+	ht_set(test, "esdf", "5");
+	ht_set(test, "fsdf", "6");
 
-	// length of buckets
-	int len;
-} ht;
+	ht_print(test);
 
-ht *ht_create(int len);
-void ht_print(ht *table);
-char *ht_get(ht *table, char *key);
-void ht_set(ht *table, char *key, char *val);
-void ht_unset(ht *table, char *key);
-void ht_free(ht **table);
-float ht_loadfactor(ht *table);
-void ht_rehash(ht **table, int len);
+	ht_unset(test, "asdf");
+	ht_unset(test, "bsdf");
+
+	ht_print(test);
+
+	printf("load factor: %f\n", ht_loadfactor(test));
+
+	ht_free(&test);
+
+	return 0;
+}

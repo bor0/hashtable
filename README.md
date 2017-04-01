@@ -6,7 +6,9 @@ The implementation uses separate chaining with linked lists for collision resolu
 
 For benchmarks, check the `benchmarks` folder.
 
-To run it, first build by running `make` and then write `make run`.
+To run the tests, first build by running `make` and then write `make run`.
+
+To just build the library, write `make lib`.
 
 To cleanup, run `make clean`.
 
