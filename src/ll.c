@@ -63,12 +63,15 @@ void ll_remove(ll **list, char *key) {
 }
 
 ll *ll_find(ll *list, char *key) {
-	while (list) {
-		if (!strcmp(list->key, key)) {
-			return list;
-		}
+	ll_iterator iterator;
+	ll *tmp;
 
-		list = list->next;
+	for (iterator = ll_iterator_start(list); !ll_iterator_end(&iterator); ll_iterator_next(&iterator)) {
+		tmp = ll_iterator_get(&iterator);
+
+		if (!strcmp(ll_get_key(tmp), key)) {
+			return tmp;
+		}
 	}
 
 	return NULL;
