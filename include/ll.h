@@ -37,6 +37,8 @@ void ll_add(ll **list, char *key, char *val);
 void ll_remove(ll **list, char *key);
 char **ll_find(ll *list, char *key);
 void ll_free(ll *list);
+char *ll_get_key(ll *list);
+char *ll_get_val(ll *list);
 
 ll_iterator ll_iterator_start(ll *list);
 ll *ll_iterator_get(ll_iterator *iterator);

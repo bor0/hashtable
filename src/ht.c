@@ -144,12 +144,19 @@ void ht_rehash(ht **table, int len) {
 	new_table = ht_create(len);
 
 	for (i = 0; i < (*table)->len; i++) {
-		if ((*table)->array[i] == NULL) {
+		ll_iterator iterator;
+		ll *list, *tmp;
+
+		list = (*table)->array[i];
+
+		if (list == NULL) {
 			continue;
 		}
-		// TODO: List iterator feature
-		// ...
-		// ht_set(new_table, a, b);
+
+		for (iterator = ll_iterator_start(list); !ll_iterator_end(&iterator); ll_iterator_next(&iterator)) {
+			tmp = ll_iterator_get(&iterator);
+			ht_set(new_table, ll_get_key(tmp), ll_get_val(tmp));
+		}
 	}
 
 	ht_free(table);

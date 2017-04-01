@@ -88,6 +88,14 @@ void ll_free(ll *list) {
 	return;
 }
 
+char *ll_get_key(ll *list) {
+	return list == NULL ? NULL : list->key;
+}
+
+char *ll_get_val(ll *list) {
+	return list == NULL ? NULL : list->val;
+}
+
 ll_iterator ll_iterator_start(ll *list) {
 	ll_iterator iterator;
 
@@ -100,7 +108,7 @@ ll *ll_iterator_get(ll_iterator *iterator) {
 }
 
 int ll_iterator_end(ll_iterator *iterator) {
-	return iterator->current->next == NULL;
+	return iterator->current == NULL;
 }
 
 void ll_iterator_next(ll_iterator *iterator) {

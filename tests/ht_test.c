@@ -29,12 +29,20 @@ int main() {
 
 	ht_print(test);
 
+	printf("load factor: %f\n", ht_loadfactor(test));
+
 	ht_unset(test, "asdf");
 	ht_unset(test, "bsdf");
 
 	ht_print(test);
 
 	printf("load factor: %f\n", ht_loadfactor(test));
+
+	ht_rehash(&test, 10);
+
+	ht_print(test);
+
+	printf("load factor after rehashing to 10 elements: %f\n", ht_loadfactor(test));
 
 	ht_free(&test);
 
