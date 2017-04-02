@@ -91,6 +91,16 @@ static int ht_hash(char *str, int buckets) {
 }
 
 /*
+ * Check if a hashtable contains a key
+ */
+int ht_has(ht *table, char *key) {
+	int index = ht_hash(key, table->buckets);
+	ll *list = ll_find(table->array[index], key);
+
+	return list != NULL;
+}
+
+/*
  * Insert/overwrite an element in the hashtable
  */
 void ht_set(ht *table, char *key, char *value) {
@@ -100,6 +110,7 @@ void ht_set(ht *table, char *key, char *value) {
 	if (list != NULL) {
 		/* the current key exists in the hashtable, so just overwrite its value */
 		ll_set_value(list, value);
+
 		return;
 	}
 
@@ -124,18 +135,22 @@ char *ht_get(ht *table, char *key) {
 /*
  * Remove an element from the hashtable
  */
-void ht_unset(ht *table, char *key) {
+int ht_unset(ht *table, char *key) {
 	int index = ht_hash(key, table->buckets);
 
 	if (table->array[index] == NULL) {
 		/* the list is not initialized at that index, so nothing to remove */
-		return;
+		return 0;
 	}
 
 	if (ll_remove(&table->array[index], key)) {
 		/* if the key was found in the list and was removed, decrease the number of elements */
 		table->elements--;
+
+		return 1;
 	}
+
+	return 0;
 }
 
 /*

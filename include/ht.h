@@ -29,9 +29,10 @@ typedef struct ht {
 
 ht *ht_create(int buckets);
 void ht_print(ht *table);
+int ht_has(ht *table, char *key);
 void ht_set(ht *table, char *key, char *val);
 char *ht_get(ht *table, char *key);
-void ht_unset(ht *table, char *key);
+int ht_unset(ht *table, char *key);
 void ht_free(ht **table);
 float ht_loadfactor(ht *table);
 void ht_rehash(ht **table, int buckets);

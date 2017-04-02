@@ -19,6 +19,20 @@
 #include <assert.h>
 #include "ht.h"
 
+void test_ht_has() {
+	ht *ht = ht_create(10);
+
+	ht_set(ht, "asdf", "1");
+
+	/* Should return true if the key exists */
+	assert(ht_has(ht, "asdf"));
+
+	/* Should return false if the key doesn't exist */
+	assert(!ht_has(ht, "bsdf"));
+
+	ht_free(&ht);
+}
+
 void test_ht_set() {
 	ht *ht = ht_create(10);
 
@@ -59,14 +73,20 @@ void test_ht_get() {
 
 void test_ht_unset() {
 	ht *ht = ht_create(10);
+	int retval;
 
 	ht_set(ht, "asdf", "1"); /* Third bucket */
 	ht_set(ht, "bsdf", "2");
 
-	ht_unset(ht, "asdf");
+	retval = ht_unset(ht, "asdf");
 
-	/* "asdf" should be removed from the third bucket */
-	assert(ht->array[2] == NULL);
+	/* unset should return true on successful removal, "asdf" should be removed from the third bucket */
+	assert(retval && ht->array[2] == NULL);
+
+	retval = ht_unset(ht, "asdf");
+
+	/* unset should return false when nothing is removed */
+	assert(!retval);
 
 	/* "bsdf" should remain in the fourth bucket */
 	assert(!strcmp(ll_get_key(ht->array[3]), "bsdf"));
@@ -138,6 +158,7 @@ void test_ht_rehash() {
 }
 
 int main() {
+	test_ht_has();
 	test_ht_set();
 	test_ht_get();
 	test_ht_unset();

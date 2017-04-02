@@ -49,13 +49,19 @@ void test_ll_add_2() {
 
 void test_ll_remove() {
 	ll *list = NULL;
+	int retval;
 
 	ll_add(&list, "asdf", "1");
 	ll_add(&list, "bsdf", "2");
 
-	ll_remove(&list, "asdf");
+	retval = ll_remove(&list, "csdf");
+	/* Removing a non-existing element should return 0 */
+	assert(!retval);
+
+	retval = ll_remove(&list, "asdf");
 
 	/* Removing the second element should not touch the first one */
+	assert(retval);
 	assert(!strcmp(list->key, "bsdf") && !strcmp(list->value, "2"));
 	assert(list->next == NULL);
 
