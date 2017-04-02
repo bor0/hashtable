@@ -94,6 +94,11 @@ void test_ht_loadfactor() {
 	/* Load factor should be affected when removing existing keys (1/10) */
 	assert(ht_loadfactor(ht) == 0.1f);
 
+	ht_unset(ht, "asdf");
+
+	/* Load factor should not be affected when removing non-existing keys (1/10) */
+	assert(ht_loadfactor(ht) == 0.1f);
+
 	ht_free(&ht);
 }
 

@@ -24,14 +24,14 @@ typedef struct ht {
 	int elements;
 
 	/* length of buckets */
-	int len;
+	int buckets;
 } ht;
 
-ht *ht_create(int len);
+ht *ht_create(int buckets);
 void ht_print(ht *table);
 void ht_set(ht *table, char *key, char *val);
 char *ht_get(ht *table, char *key);
 void ht_unset(ht *table, char *key);
 void ht_free(ht **table);
 float ht_loadfactor(ht *table);
-void ht_rehash(ht **table, int len);
+void ht_rehash(ht **table, int buckets);
