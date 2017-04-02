@@ -15,21 +15,21 @@
 */
 
 typedef struct ll {
-	// key of hashtable element
+	/* key of hashtable element */
 	char *key;
 
-	// value of hashtable element
+	/* value of hashtable element */
 	char *value;
 
-	// next element in linkedlist
+	/* next element in linkedlist */
 	struct ll *next;
 } ll;
 
 typedef struct ll_iterator {
-	// start of list
+	/* start of list */
 	ll *head;
 
-	// current pointer
+	/* current pointer */
 	ll *current;
 } ll_iterator;
 

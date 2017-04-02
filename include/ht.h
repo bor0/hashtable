@@ -17,13 +17,13 @@
 #include "ll.h"
 
 typedef struct ht {
-	// linked list
+	/* linked list */
 	ll **array;
 
-	// number of current elements
+	/* number of current elements */
 	int elements;
 
-	// length of buckets
+	/* length of buckets */
 	int len;
 } ht;
 
