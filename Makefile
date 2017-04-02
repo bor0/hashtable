@@ -1,27 +1,40 @@
 CC=gcc
 CFLAGS=-ansi -pedantic -Wall -Iinclude
 
+ODIR=bin
+OTESTS=$(ODIR)/tests
+OEXAMPLES=$(ODIR)/examples
+
+OUTPUTLIB=$(ODIR)/libht.a
+OUTPUTTESTS=$(OTESTS)/ll_test $(OTESTS)/ht_test
+OUTPUTEXAMPLES=$(OEXAMPLES)/example1
+
 all: lib tests examples
 
-lib:
-	mkdir -p bin
-	$(CC) $(CFLAGS) src/ht.c -c -o bin/ht.o
-	$(CC) $(CFLAGS) src/ll.c -c -o bin/ll.o
-	ar rcs bin/libht.a bin/*.o
+lib: $(OUTPUTLIB)
+tests: $(OUTPUTTESTS)
+examples: $(OUTPUTEXAMPLES)
 
-tests: lib
-	$(CC) $(CFLAGS) tests/ht_test.c -Lbin -lht -o bin/ht_test
-	$(CC) $(CFLAGS) tests/ll_test.c -Lbin -lht -o bin/ll_test
+$(ODIR)/%.o: src/%.c
+	mkdir -p $(ODIR)
+	$(CC) -c -o $@ $< $(CFLAGS)
 
-runtests: tests
-	bin/ht_test
-	bin/ll_test
+$(OUTPUTLIB): $(ODIR)/ht.o $(ODIR)/ll.o
+	ar rcs $@ $(ODIR)/*.o
 
-examples: lib
-	$(CC) $(CFLAGS) examples/example1.c -Lbin -lht -o bin/example1
+$(OTESTS)/%.o: tests/%.c
+	mkdir -p $(OTESTS)
+	$(CC) -c -o $@ $< $(CFLAGS)
 
-runexamples: examples
-	bin/example1
+$(OTESTS)/%: $(OTESTS)/%.o $(OUTPUTLIB)
+	$(CC) -L$(ODIR) -lht -o $@ $^
+
+$(OEXAMPLES)/%.o: examples/%.c
+	mkdir -p $(OEXAMPLES)
+	$(CC) -c -o $@ $< $(CFLAGS)
+
+$(OEXAMPLES)/%: $(OEXAMPLES)/%.o $(OUTPUTLIB)
+	$(CC) -L$(ODIR) -lht -o $@ $^
 
 clean:
-	rm -rf bin
+	rm -f $(ODIR)/*.o $(OTESTS)/*.o $(OEXAMPLES)/*.o $(OUTPUTLIB) $(OUTPUTTESTS) $(OUTPUTEXAMPLES)

@@ -8,9 +8,9 @@ The dependency relation between ht and ll is asymmetric.
 
 For benchmarks, check the `benchmarks` folder.
 
-To build the tests, run `make tests`. To run them, write `make runtests`.
+To build the tests, write `make tests`.
 
-To build the examples, run `make examples`. To run them, write `make runexamples`.
+To build the examples, write `make examples`.
 
 To just build the library, write `make lib`.
 
