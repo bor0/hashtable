@@ -14,28 +14,27 @@
  * along with Hashtable.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "ll.h"
+#include <stdio.h>
+#include "ht.h"
 
-typedef struct ht {
-	/* linked list */
-	ll **array;
+int hash_test(char *str, int buckets) {
+	/* random, right? */
+	return 4;
+}
 
-	/* number of current elements */
-	int elements;
+int main() {
+	ht *test = ht_create(5, hash_test);
 
-	/* length of buckets */
-	int buckets;
+	ht_set(test, "asdf", "1");
+	ht_set(test, "bsdf", "2");
+	ht_set(test, "csdf", "3");
+	ht_set(test, "dsdf", "4");
+	ht_set(test, "esdf", "5");
+	ht_set(test, "fsdf", "6");
 
-	/* hashing function */
-	int (*hashfn)(char *str, int buckets);
-} ht;
+	ht_print(test);
 
-ht *ht_create(int buckets, int (*hashfn)(char *str, int buckets));
-void ht_print(ht *table);
-int ht_has(ht *table, char *key);
-void ht_set(ht *table, char *key, char *val);
-char *ht_get(ht *table, char *key);
-int ht_unset(ht *table, char *key);
-void ht_free(ht **table);
-float ht_loadfactor(ht *table);
-void ht_rehash(ht **table, int buckets);
+	ht_free(&test);
+
+	return 0;
+}

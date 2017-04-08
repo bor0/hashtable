@@ -20,7 +20,7 @@
 #include "ht.h"
 
 void test_ht_has() {
-	ht *ht = ht_create(10);
+	ht *ht = ht_create(10, NULL);
 
 	ht_set(ht, "asdf", "1");
 
@@ -34,7 +34,7 @@ void test_ht_has() {
 }
 
 void test_ht_set() {
-	ht *ht = ht_create(10);
+	ht *ht = ht_create(10, NULL);
 
 	ht_set(ht, "asdf", "1");
 	/* Should go into the third bucket */
@@ -59,7 +59,7 @@ void test_ht_set() {
 }
 
 void test_ht_get() {
-	ht *ht = ht_create(10);
+	ht *ht = ht_create(10, NULL);
 
 	ht_set(ht, "asdf", "1");
 	/* Should be equal to '1' for the 'asdf' key */
@@ -72,7 +72,7 @@ void test_ht_get() {
 }
 
 void test_ht_unset() {
-	ht *ht = ht_create(10);
+	ht *ht = ht_create(10, NULL);
 	int retval;
 
 	ht_set(ht, "asdf", "1"); /* Third bucket */
@@ -96,7 +96,7 @@ void test_ht_unset() {
 }
 
 void test_ht_loadfactor() {
-	ht *ht = ht_create(10);
+	ht *ht = ht_create(10, NULL);
 
 	ht_set(ht, "asdf", "1"); /* Third bucket */
 	ht_set(ht, "bsdf", "2");
@@ -123,7 +123,7 @@ void test_ht_loadfactor() {
 }
 
 void test_ht_rehash() {
-	ht *ht = ht_create(3);
+	ht *ht = ht_create(3, NULL);
 
 	ht_set(ht, "x1", "1"); /* Third bucket */
 	ht_set(ht, "y2", "2"); /* Second bucket */

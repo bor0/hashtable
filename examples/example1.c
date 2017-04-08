@@ -18,7 +18,7 @@
 #include "ht.h"
 
 int main() {
-	ht *test = ht_create(5);
+	ht *test = ht_create(5, NULL);
 
 	ht_set(test, "asdf", "1");
 	ht_set(test, "bsdf", "2");

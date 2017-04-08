@@ -20,9 +20,25 @@
 #include "ht.h"
 
 /*
+ * The hashing private function
+ */
+static int ht_hash(char *str, int buckets) {
+	int h = 1234;
+	int a = 4567;
+	int i;
+
+	/* iterate through each character and calculate its hash */
+	for (i = strlen(str) - 1; i >= 0; i--) {
+		h = ((h*a) + str[i]) % buckets;
+	}
+
+	return h;
+}
+
+/*
  * Initialization of the hashtable
  */
-ht *ht_create(int buckets) {
+ht *ht_create(int buckets, int (*hashfn)(char *str, int buckets)) {
 	int i;
 	ht *table;
 
@@ -34,6 +50,7 @@ ht *ht_create(int buckets) {
 	table = (ht *)malloc(sizeof(ht));
 	table->buckets = buckets;
 	table->elements = 0;
+	table->hashfn = hashfn != NULL ? hashfn : ht_hash;
 
 	/* initialize buckets number of empty linked lists */
 	table->array = (ll **)malloc(buckets * sizeof(ll *));
@@ -75,26 +92,10 @@ void ht_print(ht *table) {
 }
 
 /*
- * The hashing private function
- */
-static int ht_hash(char *str, int buckets) {
-        int h = 1234;
-	int a = 4567;
-	int i;
-
-	/* iterate through each character and calculate its hash */
-        for (i = strlen(str) - 1; i >= 0; i--) {
-		h = ((h*a) + str[i]) % buckets;
-        }
-
-        return h;
-}
-
-/*
  * Check if a hashtable contains a key
  */
 int ht_has(ht *table, char *key) {
-	int index = ht_hash(key, table->buckets);
+	int index = table->hashfn(key, table->buckets);
 	ll *list = ll_find(table->array[index], key);
 
 	return list != NULL;
@@ -104,7 +105,7 @@ int ht_has(ht *table, char *key) {
  * Insert/overwrite an element in the hashtable
  */
 void ht_set(ht *table, char *key, char *value) {
-	int index = ht_hash(key, table->buckets);
+	int index = table->hashfn(key, table->buckets);
 	ll *list = ll_find(table->array[index], key);
 
 	if (list != NULL) {
@@ -125,7 +126,7 @@ void ht_set(ht *table, char *key, char *value) {
  * Get an element from the hashtable
  */
 char *ht_get(ht *table, char *key) {
-	int index = ht_hash(key, table->buckets);
+	int index = table->hashfn(key, table->buckets);
 	ll *list = ll_find(table->array[index], key);
 
 	/* in case list NULL (i.e. value was not found or list is not initialized), ll_get_value will return NULL */
@@ -136,7 +137,7 @@ char *ht_get(ht *table, char *key) {
  * Remove an element from the hashtable
  */
 int ht_unset(ht *table, char *key) {
-	int index = ht_hash(key, table->buckets);
+	int index = table->hashfn(key, table->buckets);
 
 	if (table->array[index] == NULL) {
 		/* the list is not initialized at that index, so nothing to remove */
@@ -194,7 +195,7 @@ void ht_rehash(ht **table, int buckets) {
 	}
 
 	/* create a new hashtable with the new number of buckets */
-	new_table = ht_create(buckets);
+	new_table = ht_create(buckets, (*table)->hashfn);
 
 	/* iterate through each bucket of the old table */
 	for (i = 0; i < (*table)->buckets; i++) {
