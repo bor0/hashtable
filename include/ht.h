@@ -21,16 +21,16 @@ typedef struct ht {
 	ll **array;
 
 	/* number of current elements */
-	int elements;
+	unsigned int elements;
 
 	/* length of buckets */
-	int buckets;
+	unsigned int buckets;
 
 	/* hashing function */
-	int (*hashfn)(char *str, int buckets);
+	unsigned int (*hashfn)(char *str, unsigned int buckets);
 } ht;
 
-ht *ht_create(int buckets, int (*hashfn)(char *str, int buckets));
+ht *ht_create(unsigned int buckets, unsigned int (*hashfn)(char *str, unsigned int buckets));
 void ht_print(ht *table);
 int ht_has(ht *table, char *key);
 void ht_set(ht *table, char *key, char *val);
@@ -38,4 +38,4 @@ char *ht_get(ht *table, char *key);
 int ht_unset(ht *table, char *key);
 void ht_free(ht **table);
 float ht_loadfactor(ht *table);
-void ht_rehash(ht **table, int buckets);
+void ht_rehash(ht **table, unsigned int buckets);

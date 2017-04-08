@@ -22,7 +22,7 @@
 /*
  * The hashing private function
  */
-static int ht_hash(char *str, int buckets) {
+static unsigned int ht_hash(char *str, unsigned int buckets) {
 	int h = 1234;
 	int a = 4567;
 	int i;
@@ -38,11 +38,11 @@ static int ht_hash(char *str, int buckets) {
 /*
  * Initialization of the hashtable
  */
-ht *ht_create(int buckets, int (*hashfn)(char *str, int buckets)) {
-	int i;
+ht *ht_create(unsigned int buckets, unsigned int (*hashfn)(char *str, unsigned int buckets)) {
+	unsigned int i;
 	ht *table;
 
-	if (buckets <= 0) {
+	if (buckets == 0) {
 		return NULL;
 	}
 
@@ -66,7 +66,7 @@ ht *ht_create(int buckets, int (*hashfn)(char *str, int buckets)) {
  * Print the hashtable in a JSON format
  */
 void ht_print(ht *table) {
-	int i;
+	unsigned int i;
 	ll *list;
 	ll_iterator iterator;
 
@@ -95,7 +95,7 @@ void ht_print(ht *table) {
  * Check if a hashtable contains a key
  */
 int ht_has(ht *table, char *key) {
-	int index = table->hashfn(key, table->buckets);
+	unsigned int index = table->hashfn(key, table->buckets) % table->buckets;
 	ll *list = ll_find(table->array[index], key);
 
 	return list != NULL;
@@ -105,7 +105,7 @@ int ht_has(ht *table, char *key) {
  * Insert/overwrite an element in the hashtable
  */
 void ht_set(ht *table, char *key, char *value) {
-	int index = table->hashfn(key, table->buckets);
+	unsigned int index = table->hashfn(key, table->buckets) % table->buckets;
 	ll *list = ll_find(table->array[index], key);
 
 	if (list != NULL) {
@@ -126,7 +126,7 @@ void ht_set(ht *table, char *key, char *value) {
  * Get an element from the hashtable
  */
 char *ht_get(ht *table, char *key) {
-	int index = table->hashfn(key, table->buckets);
+	unsigned int index = table->hashfn(key, table->buckets) % table->buckets;
 	ll *list = ll_find(table->array[index], key);
 
 	/* in case list NULL (i.e. value was not found or list is not initialized), ll_get_value will return NULL */
@@ -137,7 +137,7 @@ char *ht_get(ht *table, char *key) {
  * Remove an element from the hashtable
  */
 int ht_unset(ht *table, char *key) {
-	int index = table->hashfn(key, table->buckets);
+	unsigned int index = table->hashfn(key, table->buckets) % table->buckets;
 
 	if (table->array[index] == NULL) {
 		/* the list is not initialized at that index, so nothing to remove */
@@ -158,7 +158,7 @@ int ht_unset(ht *table, char *key) {
  * Free the hashtable from memory
  */
 void ht_free(ht **table) {
-	int i;
+	unsigned int i;
 
 	if (*table == NULL) {
 		return;
@@ -186,11 +186,11 @@ float ht_loadfactor(ht *table) {
 /*
  * Rehash the hashtable to a different number of buckets
  */
-void ht_rehash(ht **table, int buckets) {
+void ht_rehash(ht **table, unsigned int buckets) {
 	ht *new_table;
-	int i;
+	unsigned int i;
 
-	if (buckets <= 0) {
+	if (buckets == 0) {
 		return;
 	}
 

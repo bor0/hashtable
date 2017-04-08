@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-ansi -pedantic -Wall -Iinclude
+CFLAGS=-ansi -pedantic -Wall -Iinclude -O3
 
 ODIR=bin
 OTESTS=$(ODIR)/tests

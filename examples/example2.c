@@ -17,13 +17,13 @@
 #include <stdio.h>
 #include "ht.h"
 
-int hash_test(char *str, int buckets) {
+unsigned int hash_test(char *str, unsigned int buckets) {
 	/* random, right? */
 	return 4;
 }
 
 int main() {
-	ht *test = ht_create(5, hash_test);
+	ht *test = ht_create(1, hash_test);
 
 	ht_set(test, "asdf", "1");
 	ht_set(test, "bsdf", "2");
