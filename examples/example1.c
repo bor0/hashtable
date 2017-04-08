@@ -18,7 +18,8 @@
 #include "ht.h"
 
 int main() {
-	ht *test = ht_create(5, NULL);
+	ht_options options = { 0, NULL };
+	ht *test = ht_create(5, options);
 
 	ht_set(test, "asdf", "1");
 	ht_set(test, "bsdf", "2");
@@ -38,7 +39,7 @@ int main() {
 
 	printf("load factor: %f\n", ht_loadfactor(test));
 
-	ht_rehash(&test, 10);
+	ht_rehash(test, 10);
 
 	ht_print(test);
 

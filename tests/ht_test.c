@@ -19,8 +19,10 @@
 #include <assert.h>
 #include "ht.h"
 
+ht_options options = { 0, NULL };
+
 void test_ht_has() {
-	ht *ht = ht_create(10, NULL);
+	ht *ht = ht_create(10, options);
 
 	ht_set(ht, "asdf", "1");
 
@@ -34,7 +36,7 @@ void test_ht_has() {
 }
 
 void test_ht_set() {
-	ht *ht = ht_create(10, NULL);
+	ht *ht = ht_create(10, options);
 
 	ht_set(ht, "asdf", "1");
 	/* Should go into the third bucket */
@@ -59,7 +61,7 @@ void test_ht_set() {
 }
 
 void test_ht_get() {
-	ht *ht = ht_create(10, NULL);
+	ht *ht = ht_create(10, options);
 
 	ht_set(ht, "asdf", "1");
 	/* Should be equal to '1' for the 'asdf' key */
@@ -72,7 +74,7 @@ void test_ht_get() {
 }
 
 void test_ht_unset() {
-	ht *ht = ht_create(10, NULL);
+	ht *ht = ht_create(10, options);
 	int retval;
 
 	ht_set(ht, "asdf", "1"); /* Third bucket */
@@ -96,7 +98,7 @@ void test_ht_unset() {
 }
 
 void test_ht_loadfactor() {
-	ht *ht = ht_create(10, NULL);
+	ht *ht = ht_create(10, options);
 
 	ht_set(ht, "asdf", "1"); /* Third bucket */
 	ht_set(ht, "bsdf", "2");
@@ -123,7 +125,7 @@ void test_ht_loadfactor() {
 }
 
 void test_ht_rehash() {
-	ht *ht = ht_create(3, NULL);
+	ht *ht = ht_create(3, options);
 
 	ht_set(ht, "x1", "1"); /* Third bucket */
 	ht_set(ht, "y2", "2"); /* Second bucket */
@@ -139,17 +141,17 @@ void test_ht_rehash() {
 	/* Load factor should be equal to 2 (6/3) */
 	assert(ht_loadfactor(ht) == 2.0f);
 
-	ht_rehash(&ht, 6);
+	ht_rehash(ht, 6);
 
 	/* Load factor should be equal to 1 after rehash (6/6) */
 	assert(ht_loadfactor(ht) == 1.0f);
 
-	ht_rehash(&ht, 12);
+	ht_rehash(ht, 12);
 
 	/* Load factor should be equal to 0.5 after rehash (6/12) */
 	assert(ht_loadfactor(ht) == 0.5f);
 
-	ht_rehash(&ht, 2);
+	ht_rehash(ht, 2);
 
 	/* Load factor should be equal to 3 after rehash (6/2) */
 	assert(ht_loadfactor(ht) == 3.0f);

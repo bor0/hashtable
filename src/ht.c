@@ -38,7 +38,7 @@ static unsigned int ht_hash(char *str, unsigned int buckets) {
 /*
  * Initialization of the hashtable
  */
-ht *ht_create(unsigned int buckets, unsigned int (*hashfn)(char *str, unsigned int buckets)) {
+ht *ht_create(unsigned int buckets, ht_options options) {
 	unsigned int i;
 	ht *table;
 
@@ -48,14 +48,18 @@ ht *ht_create(unsigned int buckets, unsigned int (*hashfn)(char *str, unsigned i
 
 	/* create a new hashtable and initialize number of buckets and elements */
 	table = (ht *)malloc(sizeof(ht));
-	table->buckets = buckets;
 	table->elements = 0;
-	table->hashfn = hashfn != NULL ? hashfn : ht_hash;
+	table->options = options;
+	table->buckets = buckets;
+	table->rehashing = 0;
+
+	/* default to hash function */
+	table->options.hashfn = table->options.hashfn != NULL ? options.hashfn : ht_hash;
 
 	/* initialize buckets number of empty linked lists */
-	table->array = (ll **)malloc(buckets * sizeof(ll *));
+	table->array = (ll **)malloc(table->buckets * sizeof(ll *));
 
-	for (i = 0; i < buckets; i++) {
+	for (i = 0; i < table->buckets; i++) {
 		table->array[i] = NULL;
 	}
 
@@ -95,7 +99,7 @@ void ht_print(ht *table) {
  * Check if a hashtable contains a key
  */
 int ht_has(ht *table, char *key) {
-	unsigned int index = table->hashfn(key, table->buckets) % table->buckets;
+	unsigned int index = table->options.hashfn(key, table->buckets) % table->buckets;
 	ll *list = ll_find(table->array[index], key);
 
 	return list != NULL;
@@ -105,7 +109,7 @@ int ht_has(ht *table, char *key) {
  * Insert/overwrite an element in the hashtable
  */
 void ht_set(ht *table, char *key, char *value) {
-	unsigned int index = table->hashfn(key, table->buckets) % table->buckets;
+	unsigned int index = table->options.hashfn(key, table->buckets) % table->buckets;
 	ll *list = ll_find(table->array[index], key);
 
 	if (list != NULL) {
@@ -120,13 +124,18 @@ void ht_set(ht *table, char *key, char *value) {
 
 	/* add the key and the value to the linked list */
 	ll_add(&table->array[index], key, value);
+
+	/* check max loadfactor threshold */
+	if (table->options.max_loadfactor != 0 && ht_loadfactor(table) >= table->options.max_loadfactor) {
+		ht_rehash(table, table->buckets * 2);
+	}
 }
 
 /*
  * Get an element from the hashtable
  */
 char *ht_get(ht *table, char *key) {
-	unsigned int index = table->hashfn(key, table->buckets) % table->buckets;
+	unsigned int index = table->options.hashfn(key, table->buckets) % table->buckets;
 	ll *list = ll_find(table->array[index], key);
 
 	/* in case list NULL (i.e. value was not found or list is not initialized), ll_get_value will return NULL */
@@ -137,7 +146,7 @@ char *ht_get(ht *table, char *key) {
  * Remove an element from the hashtable
  */
 int ht_unset(ht *table, char *key) {
-	unsigned int index = table->hashfn(key, table->buckets) % table->buckets;
+	unsigned int index = table->options.hashfn(key, table->buckets) % table->buckets;
 
 	if (table->array[index] == NULL) {
 		/* the list is not initialized at that index, so nothing to remove */
@@ -171,9 +180,11 @@ void ht_free(ht **table) {
 		}
 	}
 
-	/* free the hashtable allocation as well and set its value to NULL */
-	free(*table);
-	*table = NULL;
+	/* we need to keep the original allocation if rehashing */
+	if (!(*table)->rehashing) {
+		free(*table);
+		*table = NULL;
+	}
 }
 
 /*
@@ -186,23 +197,25 @@ float ht_loadfactor(ht *table) {
 /*
  * Rehash the hashtable to a different number of buckets
  */
-void ht_rehash(ht **table, unsigned int buckets) {
+void ht_rehash(ht *table, unsigned int buckets) {
 	ht *new_table;
 	unsigned int i;
 
-	if (buckets == 0) {
+	/* create a new hashtable with the new number of buckets */
+	new_table = ht_create(buckets, table->options);
+
+	if (new_table == NULL) {
 		return;
 	}
 
-	/* create a new hashtable with the new number of buckets */
-	new_table = ht_create(buckets, (*table)->hashfn);
+	table->rehashing = 1;
 
 	/* iterate through each bucket of the old table */
-	for (i = 0; i < (*table)->buckets; i++) {
+	for (i = 0; i < table->buckets; i++) {
 		ll_iterator iterator;
 		ll *list, *tmp;
 
-		list = (*table)->array[i];
+		list = table->array[i];
 
 		for (iterator = ll_iterator_start(list); !ll_iterator_end(&iterator); ll_iterator_next(&iterator)) {
 			/* get the current element of the iterating bucket */
@@ -213,7 +226,10 @@ void ht_rehash(ht **table, unsigned int buckets) {
 		}
 	}
 
-	/* free the old table and set the value to the new one */
-	ht_free(table);
-	*table = new_table;
+	/* free the old table (but not the main allocation) */
+	ht_free(&table);
+	memcpy(table, new_table, sizeof (ht));
+
+	/* free main allocation of new table */
+	free(new_table);
 }

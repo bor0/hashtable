@@ -17,23 +17,27 @@
 #include <stdio.h>
 #include "ht.h"
 
-unsigned int hash_test(char *str, unsigned int buckets) {
-	/* random, right? */
-	return 4;
-}
-
 int main() {
-	ht_options options = { 0, NULL };
-	ht *test = ht_create(1, options);
+	ht_options options = { 0.5, NULL };
+	ht *test = ht_create(5, options);
 
 	ht_set(test, "asdf", "1");
-	ht_set(test, "bsdf", "2");
-	ht_set(test, "csdf", "3");
-	ht_set(test, "dsdf", "4");
-	ht_set(test, "esdf", "5");
-	ht_set(test, "fsdf", "6");
+	printf("load factor: %f\n", ht_loadfactor(test));
 
-	ht_print(test);
+	ht_set(test, "bsdf", "2");
+	printf("load factor: %f\n", ht_loadfactor(test));
+
+	ht_set(test, "csdf", "3");
+	printf("load factor: %f\n", ht_loadfactor(test));
+
+	ht_set(test, "dsdf", "4");
+	printf("load factor: %f\n", ht_loadfactor(test));
+
+	ht_set(test, "esdf", "5");
+	printf("load factor: %f\n", ht_loadfactor(test));
+
+	ht_set(test, "fsdf", "6");
+	printf("load factor: %f\n", ht_loadfactor(test));
 
 	ht_free(&test);
 

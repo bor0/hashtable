@@ -7,7 +7,7 @@ OEXAMPLES=$(ODIR)/examples
 
 OUTPUTLIB=$(ODIR)/libht.a
 OUTPUTTESTS=$(OTESTS)/ll_test $(OTESTS)/ht_test
-OUTPUTEXAMPLES=$(OEXAMPLES)/example1 $(OEXAMPLES)/example2
+OUTPUTEXAMPLES=$(OEXAMPLES)/example1 $(OEXAMPLES)/example2 $(OEXAMPLES)/example3
 
 all: lib tests examples
 
