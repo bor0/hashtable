@@ -23,8 +23,8 @@ unsigned int hash_test(char *str, unsigned int buckets) {
 }
 
 int main() {
-	ht_options options = { 0, NULL };
-	ht *test = ht_create(1, options);
+	ht_options options = { 0, hash_test };
+	ht *test = ht_create(5, options);
 
 	ht_set(test, "asdf", "1");
 	ht_set(test, "bsdf", "2");

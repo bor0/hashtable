@@ -43,7 +43,7 @@ ht *ht_create(unsigned int buckets, ht_options options) {
 	ht *table;
 
 	if (buckets == 0) {
-		return NULL;
+		buckets = 16;
 	}
 
 	/* create a new hashtable and initialize number of buckets and elements */
@@ -54,7 +54,9 @@ ht *ht_create(unsigned int buckets, ht_options options) {
 	table->rehashing = 0;
 
 	/* default to hash function */
-	table->options.hashfn = table->options.hashfn != NULL ? options.hashfn : ht_hash;
+	if (table->options.hashfn == NULL) {
+		table->options.hashfn = ht_hash;
+	}
 
 	/* initialize buckets number of empty linked lists */
 	table->array = (ll **)malloc(table->buckets * sizeof(ll *));
@@ -203,10 +205,6 @@ void ht_rehash(ht *table, unsigned int buckets) {
 
 	/* create a new hashtable with the new number of buckets */
 	new_table = ht_create(buckets, table->options);
-
-	if (new_table == NULL) {
-		return;
-	}
 
 	table->rehashing = 1;
 
