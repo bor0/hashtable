@@ -18,6 +18,8 @@ To build everything, write `make`.
 
 To cleanup, run `make clean`.
 
+For memory leaks test, run `leaks -atExit -- ./ht_test | grep LEAK:`.
+
 Boro Sitnikovski
 
 February 2017

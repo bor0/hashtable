@@ -182,6 +182,9 @@ void ht_free(ht **table) {
 		}
 	}
 
+	/* free bucket array */
+	free((*table)->array);
+
 	/* we need to keep the original allocation if rehashing */
 	if (!(*table)->rehashing) {
 		free(*table);
